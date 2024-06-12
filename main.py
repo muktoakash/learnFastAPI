@@ -19,9 +19,9 @@ def create_task(task: Task):
     tasks.append(task)
     return task
 
-@app.get("/")
-def read():
-    return {"hello": "world"}
+@app.get("/tasks/", response_model = List[Task])
+def read_tasks():
+    return tasks
 
 if __name__ == "__main__":
     import uvicorn
