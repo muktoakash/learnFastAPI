@@ -33,7 +33,7 @@ def read_task(task_id: UUID):
 
 @app.put("/tasks/{task_id}", response_model=Task)
 def update_task(task_id: UUID, task_update: Task):
-    if idx, task in enumerate(tasks):
+    for idx, task in enumerate(tasks):
         if task.id == task_id:
             updated_task = task.copy(update = task_update.dict(exclude_unset=True))
             tasks[idx] = updated_task
