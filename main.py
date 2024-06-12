@@ -26,10 +26,20 @@ def read_tasks():
 @app.get("/tasks/{task_id}", response_model=Task)
 def read_task(task_id: UUID):
     for task in tasks:
-        if task.id == task.id:
+        if task.id == task_id:
             return task
     
-    return HTTPException(status_code=404, detail="Task not found")
+    raise HTTPException(status_code=404, detail="Task not found")
+
+@app.put("/tasks/{task_id}", response_model=Task)
+def update_task(task_id: UUID, task_update: Task):
+    if idx, task in enumerate(tasks):
+        if task.id == task_id:
+            updated_task = task.copy(update = task_update.dict(exclude_unset=True))
+            tasks[idx] = updated_task
+            return updated_task
+
+    raise HTTPException(status_code=404, detail="Task not found")
 
 
 if __name__ == "__main__":
