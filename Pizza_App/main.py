@@ -3,53 +3,60 @@ from pydantic import BaseModel
 from typing import List, Optional
 from uuid import UUID, uuid4
 
+from auth_routes import auth_router
+from order_routes import order_router
+
 app = FastAPI()
 
-class Task(BaseModel):
-    id: Optional[UUID] = None
-    title: str
-    description: Optional[str] = None
-    completed: bool = False
+app.include_router(auth_router)
+app.include_router(order_router)
 
-tasks = []
 
-@app.post("/tasks/", response_model=Task)
-def create_task(task: Task):
-    task.id = uuid4()
-    tasks.append(task)
-    return task
+# class Task(BaseModel):
+#     id: Optional[UUID] = None
+#     title: str
+#     description: Optional[str] = None
+#     completed: bool = False
 
-@app.get("/tasks/", response_model = List[Task])
-def read_tasks():
-    return tasks
+# tasks = []
 
-@app.get("/tasks/{task_id}", response_model=Task)
-def read_task(task_id: UUID):
-    for task in tasks:
-        if task.id == task_id:
-            return task
-    
-    raise HTTPException(status_code=404, detail="Task not found")
+# @app.post("/tasks/", response_model=Task)
+# def create_task(task: Task):
+#     task.id = uuid4()
+#     tasks.append(task)
+#     return task
 
-@app.put("/tasks/{task_id}", response_model=Task)
-def update_task(task_id: UUID, task_update: Task):
-    for idx, task in enumerate(tasks):
-        if task.id == task_id:
-            updated_task = task.copy(update = task_update.dict(exclude_unset=True))
-            tasks[idx] = updated_task
-            return updated_task
+# @app.get("/tasks/", response_model = List[Task])
+# def read_tasks():
+#     return tasks
 
-    raise HTTPException(status_code=404, detail="Task not found")
+# @app.get("/tasks/{task_id}", response_model=Task)
+# def read_task(task_id: UUID):
+#     for task in tasks:
+#         if task.id == task_id:
+#             return task
 
-@app.delete("/tasks/{task_id}", response_model=Task)
-def delete_task(task_id: UUID):
-    for idx, task in enumerate(tasks):
-        if task.id == task_id:
-            return tasks.pop(idx)
+#     raise HTTPException(status_code=404, detail="Task not found")
 
-    raise HTTPException(status_code=404, detail="Task not found")
+# @app.put("/tasks/{task_id}", response_model=Task)
+# def update_task(task_id: UUID, task_update: Task):
+#     for idx, task in enumerate(tasks):
+#         if task.id == task_id:
+#             updated_task = task.copy(update = task_update.dict(exclude_unset=True))
+#             tasks[idx] = updated_task
+#             return updated_task
 
-if __name__ == "__main__":
-    import uvicorn
+#     raise HTTPException(status_code=404, detail="Task not found")
 
-    uvicorn.run(app, host="0.0.0.0", port = 8000)
+# @app.delete("/tasks/{task_id}", response_model=Task)
+# def delete_task(task_id: UUID):
+#     for idx, task in enumerate(tasks):
+#         if task.id == task_id:
+#             return tasks.pop(idx)
+
+#     raise HTTPException(status_code=404, detail="Task not found")
+
+# if __name__ == "__main__":
+#     import uvicorn
+
+#     uvicorn.run(app, host="0.0.0.0", port = 8000)
