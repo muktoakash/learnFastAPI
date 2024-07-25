@@ -1,3 +1,5 @@
+""" database.py """
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declaritive_base, sessionmaker
 

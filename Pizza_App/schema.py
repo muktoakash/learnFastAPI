@@ -1,2 +1,3 @@
-# schema.py
+""" schema.py """
 
+from pydantic import BaseModel
